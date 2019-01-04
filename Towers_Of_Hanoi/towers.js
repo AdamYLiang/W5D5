@@ -1,20 +1,22 @@
 const reader = require('readline');
 
-const rl = reader.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
 function Game() {
     this.towers = [[3,2,1],[],[]];
 }
 
 Game.prototype.promptMove = function(cb) {
+
+    const rl = reader.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
     console.log(this.print());
     rl.question('Make a move (from,to): ', answer => {
         const startTowerIdx = parseInt(answer[0]);
         const endTowerIdx = parseInt(answer[answer.length - 1]);
         if (this.move(startTowerIdx, endTowerIdx)) {
+            rl.close();
             this.run(cb);
         }
         else {
@@ -60,14 +62,6 @@ Game.prototype.run = function(completeCB) {
     }
 };
 
-const fungame = new Game(); 
-fungame.run(() => {
-    console.log('You won');
-    rl.close();
-});
-// console.log(fungame.move(0,1));
-// console.log(fungame.towers);
-// console.log(fungame.move(0,1));
-// console.log(fungame.towers);
-// console.log(fungame.isValidMove(0, 1));
-// console.log(fungame.isValidMove(1, 0));
+//Export and Require
+module.exports = Game;
+
