@@ -20,4 +20,50 @@ function addNumbers(sum, numsLeft, completionCallback) {
     }
 }
 
-addNumbers(0, 3, sum => console.log(`Total Sum: ${sum}`));
+// addNumbers(0, 3, sum => console.log(`Total Sum: ${sum}`));
+
+function askIfGreaterThan(el1, el2, cb) {
+    rl.question(`Is ${el1} > ${el2}: `, answer => {
+        answer === "yes" ? cb(true) : cb(false); 
+    });
+}
+
+function innerBubbleSortLoop(arr, i, madeAnySwaps, outerBubbleSortLoop) {
+    if (i === arr.length - 1) {
+        //Base case, should give OBSL false
+        outerBubbleSortLoop(madeAnySwaps);
+    }
+    else {
+        askIfGreaterThan(arr[i], arr[i+1], isGreaterThan => {
+            if (isGreaterThan) {
+                madeAnySwaps = true; 
+                [arr[i], arr[i+1]] = [arr[i+1], arr[i]];
+            }
+
+            innerBubbleSortLoop(arr, ++i, madeAnySwaps, outerBubbleSortLoop);
+        });
+    }
+}
+
+// askIfGreaterThan(1,2, x => console.log(`${x} you did it!`));
+// let arr = [3,2,1];
+// innerBubbleSortLoop(arr, 0, false, function(x) {console.log(x);});
+
+function absurdBubbleSort(arr, completeCB) {
+    function outerBubbleSortLoop(isSwapped){
+        if (isSwapped) {
+            innerBubbleSortLoop(arr, 0, false, outerBubbleSortLoop);
+        }
+        else {
+            //If no more swaps made, complete
+            completeCB(arr);
+        }
+    }
+
+    outerBubbleSortLoop(true);
+}
+
+absurdBubbleSort([3, 2, 1], function (arr) {
+    console.log("Sorted array: " + JSON.stringify(arr));
+    rl.close();
+});
